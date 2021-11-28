@@ -21,12 +21,12 @@ public class ListingScraperBinance {
     }
 
     void get_announcement () throws IOException, InterruptedException {
-        System.out.println(Main.dateFormat.format(Main.date) + " DEPLOYED");
+        System.out.println(Main.getCurrentTimeStamp()  + " DEPLOYED");
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 //        sendAsync(...)
         announcement = response.body();
-        System.out.println(Main.dateFormat.format(Main.date) + " RESPONSE");
+        System.out.println(Main.getCurrentTimeStamp() + " RESPONSE");
     }
 
     String get_coin () throws IOException, InterruptedException {

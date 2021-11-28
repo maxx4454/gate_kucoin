@@ -51,7 +51,7 @@ public class TradeClientGate {
         order.setCurrencyPair(currencyPair);
 
         Order created = spotApi.createOrder(order);
-        System.out.printf(Main.dateFormat.format(Main.date) + "order created with id %s, status %s\n", created.getId(), created.getStatus());
+        System.out.printf(Main.getCurrentTimeStamp()+ "order created with id %s, status %s\n", created.getId(), created.getStatus());
 
         while (!Order.StatusEnum.CLOSED.equals(created.getStatus())) {
             order.setPrice(lastPrice);
@@ -60,8 +60,8 @@ public class TradeClientGate {
             lastPrice = Float.toString(tmp);
 
             created = spotApi.createOrder(order);
-            System.out.printf(Main.dateFormat.format(Main.date) + "order created with id %s, status %s\n", created.getId(), created.getStatus());
+            System.out.printf(Main.getCurrentTimeStamp() + "order created with id %s, status %s\n", created.getId(), created.getStatus());
         }
-        System.out.println(Main.dateFormat.format(Main.date) + "SUCCESS");
+        System.out.println(Main.getCurrentTimeStamp() + "SUCCESS");
     }
 }

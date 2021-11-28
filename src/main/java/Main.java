@@ -1,17 +1,15 @@
 import io.gate.gateapi.ApiException;
-
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 
+
 public class Main {
     static TradeClientKucoin kucoin;
-    static DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss.SSS");
-    static Date date = new Date();
     static int mode = 1; //1 for gate; 0 for kucoin
+    static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
     static {
         try {
@@ -41,22 +39,34 @@ public class Main {
     }
 
     static String coin;
-    static String old_coin = "KEK";
+    static String old_coin;
 
-    //мб из файла выгружать
+    static {
+        try {
+            old_coin = FileLoader.readFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static String getCurrentTimeStamp() {
+        Date now = new Date();
+        return sdf.format(now);
+    }
 
     public static void main(String[] args) throws IOException, InterruptedException, ApiException {
-
+        System.out.println(getCurrentTimeStamp() + " NEW COIN DETECTED: " + old_coin);
         do {
             coin = scraper.get_coin();
         } while (Objects.equals(coin, old_coin));
 
         String symbol = coin + "-USDT";
-        System.out.println(dateFormat.format(date) + " NEW COIN DETECTED: " + coin);
+        System.out.println(getCurrentTimeStamp()  + " NEW COIN DETECTED: " + coin);
 
         if (mode == 0) kucoin.createBuyOrder(10L, symbol, "market", 1L);
         else gate.createOrder(symbol);
 
         old_coin = coin;
+//        FileLoader.writeFile(coin);
     }
 }
