@@ -1,7 +1,9 @@
 import io.gate.gateapi.ApiClient;
-import io.gate.gateapi.ApiException;
+//import io.gate.gateapi.ApiException;
 import io.gate.gateapi.models.*;
 import io.gate.gateapi.api.SpotApi;
+import lombok.SneakyThrows;
+
 import java.util.List;
 
 public class TradeClientGate {
@@ -14,7 +16,7 @@ public class TradeClientGate {
     Order order;
     float multi = 1.2f;
 
-    public TradeClientGate () throws ApiException {
+    public TradeClientGate () {
         currency = "USDT";
         orderAmount = "1";
 
@@ -33,7 +35,8 @@ public class TradeClientGate {
 
     }
 
-    public void createOrder(String coin) throws ApiException {
+    @SneakyThrows
+    public void createOrder(String coin) {
         // get last price
         currencyPair = coin.replace('-', '_');
         List<Ticker> tickers = spotApi.listTickers().currencyPair(currencyPair).execute();
