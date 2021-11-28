@@ -21,11 +21,7 @@ public class Main {
 
     static TradeClientGate gate;
     static {
-        try {
-            gate = new TradeClientGate();
-        } catch (ApiException e) {
-            e.printStackTrace();
-        }
+        gate = new TradeClientGate();
     }
 
     static ListingScraperBinance scraper;
