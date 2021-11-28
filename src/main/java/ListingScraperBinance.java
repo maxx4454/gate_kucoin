@@ -4,10 +4,8 @@ import java.net.URISyntaxException;
 import java.net.http.HttpRequest;
 import java.net.http.HttpClient;
 import java.net.http.HttpResponse;
-import java.util.Calendar;
 
 public class ListingScraperBinance {
-    String coin;
     String announcement;
     static String link = "https://www.binance.com/bapi/composite/v1/public/cms/article/catalog/list/query?catalogId=48&pageNo=1&pageSize=15&rnd=";
 
@@ -22,16 +20,16 @@ public class ListingScraperBinance {
     public ListingScraperBinance() throws URISyntaxException {
     }
 
-    void get_announcement () throws URISyntaxException, IOException, InterruptedException {
-        System.out.println(Calendar.getInstance().getTime() + " DEPLOYED");
+    void get_announcement () throws IOException, InterruptedException {
+        System.out.println(Main.dateFormat.format(Main.date) + " DEPLOYED");
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 //        sendAsync(...)
         announcement = response.body();
-        System.out.println(Calendar.getInstance().getTime() + " RESPONSE");
+        System.out.println(Main.dateFormat.format(Main.date) + " RESPONSE");
     }
 
-    String get_coin () throws URISyntaxException, IOException, InterruptedException {
+    String get_coin () throws IOException, InterruptedException {
         get_announcement();
         int index = announcement.indexOf("Will List");
 
