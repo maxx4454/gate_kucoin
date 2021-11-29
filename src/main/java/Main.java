@@ -8,7 +8,7 @@ import java.util.Objects;
 
 public class Main {
     static TradeClientKucoin kucoin;
-    static int mode = 1; //1 for gate; 0 for kucoin
+    static int mode = 0; //1 for gate; 0 for kucoin
     static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
     static {
@@ -51,7 +51,7 @@ public class Main {
     }
 
     public static void main(String[] args) throws IOException, InterruptedException, ApiException {
-        System.out.println(getCurrentTimeStamp() + " NEW COIN DETECTED: " + old_coin);
+        System.out.println(getCurrentTimeStamp() + " oldcoin is: " + old_coin);
         do {
             coin = scraper.get_coin();
         } while (Objects.equals(coin, old_coin));

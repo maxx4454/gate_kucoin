@@ -33,6 +33,7 @@ public class TradeClientKucoin {
                 .price(BigDecimal.valueOf(price)).size(BigDecimal.valueOf(volume)).side("buy")
                 .symbol(symbol).type(type).clientOid(order_id).build();
         kucoinRestClient.orderAPI().createOrder(request);
+        System.out.println(Main.getCurrentTimeStamp() + " SUCCESSFULLY ORDERED");
     }
 
 
