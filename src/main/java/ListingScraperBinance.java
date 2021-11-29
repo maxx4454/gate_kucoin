@@ -29,6 +29,7 @@ public class ListingScraperBinance {
         System.out.println(Main.getCurrentTimeStamp() + " RESPONSE");
     }
 
+
     String get_coin () throws IOException, InterruptedException {
         get_announcement();
         int index = announcement.indexOf("Will List");

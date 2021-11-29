@@ -30,7 +30,7 @@ public class TradeClientKucoin {
     public void createBuyOrder(Long price, String symbol, String type, Long volume) throws IOException {
         String order_id = UUID.randomUUID().toString();
         OrderCreateApiRequest request = OrderCreateApiRequest.builder()
-                .price(BigDecimal.valueOf(price)).size(BigDecimal.valueOf(volume)).side("buy")
+                .price(BigDecimal.valueOf(price)).funds(BigDecimal.valueOf(volume)).side("buy")
                 .symbol(symbol).type(type).clientOid(order_id).build();
         kucoinRestClient.orderAPI().createOrder(request);
         System.out.println(Main.getCurrentTimeStamp() + " SUCCESSFULLY ORDERED");
