@@ -1,18 +1,17 @@
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 
 public class FileLoader {
     static void writeFile (String s) throws IOException {
-        FileWriter myWriter = new FileWriter("/src/main/resources/old_coin.txt");
+        FileLoader.class.getResource("parser.txt").getFile();
+        FileWriter myWriter;
+        myWriter = FileLoader.class.getResource("parser.txt").getFile();
+//        myWriter = new FileWriter("src/main/resources/old_coin.txt");
         myWriter.write(s);
         myWriter.close();
     }
 
-    static String readFile () throws IOException {
-        InputStream is = FileLoader.class.getResourceAsStream("/old_coin.txt");
+    static String readFile (String name) throws IOException {
+        InputStream is = FileLoader.class.getResourceAsStream("/" + name);
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
         return reader.readLine();
     }
