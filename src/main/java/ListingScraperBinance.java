@@ -91,7 +91,6 @@ public class ListingScraperBinance {
             this.httpClient = httpClient;
             this.context = HttpClientContext.create();
             this.httpget = httpget;
-
         }
 
         @Override
