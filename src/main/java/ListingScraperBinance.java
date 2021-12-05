@@ -1,4 +1,5 @@
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.config.CookieSpecs;
@@ -16,10 +17,14 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
+import java.util.Random;
+
+import static java.lang.System.currentTimeMillis;
 
 
 public class ListingScraperBinance {
-    static String link = "https://www.binancezh.top/bapi/composite/v1/public/cms/article/catalog/list/query?catalogId=48&pageNo=1&pageSize=15";
+    static String link = "https://www.binancezh.com/bapi/composite/v1/public/cms/article/catalog/list/query?";
+//    static String link = "https://www.binancezh.com/gateway-api/v1/public/cms/article/list/query?";
     static FileWriter myWriter;
     GetThread[] threads;
     HttpGet[] httpget;
@@ -54,18 +59,18 @@ public class ListingScraperBinance {
 
     static String[] urisToGet = {
             //delayed
-            "https://www.binance.com/bapi/composite/v1/public/cms/article/catalog/list/query?catalogId=48&pageNo=1&pageSize=15&rnd=",
+//            "https://www.binance.com/bapi/composite/v1/public/cms/article/catalog/list/query?catalogId=48&pageNo=1&pageSize=15&rnd=",
 
-            //status = ?
-            "https://www.binancezh.top/bapi/composite/v1/public/cms/article/catalog/list/query?catalogId=48&pageNo=1&pageSize=15",
+            //status = dead
+//            "https://www.binancezh.top/bapi/composite/v1/public/cms/article/catalog/list/query?catalogId=48&pageNo=1&pageSize=15",
 
-            //status = ?
-            "https://api.yshyqxx.com/bapi/composite/v1/public/cms/article/catalog/list/query?catalogId=48&pageNo=1&pageSize=15",
+            //status = dead after 150 sec
+//            "https://api.yshyqxx.com/bapi/composite/v1/public/cms/article/catalog/list/query?catalogId=48&pageNo=1&pageSize=15",
 
-            //status = ?
-            "https://www.binancezh.cz/bapi/composite/v1/public/cms/article/catalog/list/query?catalogId=48&pageNo=1&pageSize=15",
+            //status = dead
+//            "https://www.binancezh.cz/bapi/composite/v1/public/cms/article/catalog/list/query?catalogId=48&pageNo=1&pageSize=15",
 
-            //status = ?
+            //status = alive???
             "https://www.binancezh.com/bapi/composite/v1/public/cms/article/catalog/list/query?catalogId=48&pageNo=1&pageSize=15"
     };
 
@@ -86,6 +91,10 @@ public class ListingScraperBinance {
         private final HttpContext context;
         private final HttpGet httpget;
         String anCoin;
+        String random_string;
+        String rand_page_size;
+        String random_number;
+        Random RanNum = new Random();
 
         public GetThread(CloseableHttpClient httpClient, HttpGet httpget) {
             this.httpClient = httpClient;
@@ -93,21 +102,30 @@ public class ListingScraperBinance {
             this.httpget = httpget;
         }
 
+
+
         @Override
         public void run() {
 
             do {
                 try {
-                    Thread.sleep(10);
-                    CloseableHttpResponse response = httpClient.execute(
-                            httpget, context);
 
+                    random_string = RandomStringUtils.randomAlphanumeric(10);
+                    random_number = String.valueOf(1 + RanNum.nextInt(99999999));
+                    rand_page_size = String.valueOf(1 +  RanNum.nextInt(200));
+                    String[] queries = new String[] {"type=1", "catalogId=48", "pageNo=1", "pageSize="+rand_page_size, "rnd="+ currentTimeMillis(),
+                            random_string+ "=" +random_number};
+
+                    String uri = link + queries[0] + "&" + queries[1]+ "&" + queries[2]+ "&" + queries[3]+ "&" + queries[4] + "&" + queries[5];
+                    CloseableHttpResponse response = httpClient.execute(
+                            new HttpGet(uri),
+                            context);
 
                     String str = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
                     response.close();
 
                     anCoin = getCoin(str);
-//                    System.out.println(Main.getCurrentTimeStamp() + " parserinfo: " + anCoin);
+                    System.out.println(Main.getCurrentTimeStamp() + " parserinfo: " + anCoin);
 
                     if (!Objects.equals(anCoin, old_coin)){
                         writeToFile(anCoin);
@@ -118,6 +136,11 @@ public class ListingScraperBinance {
                 catch (InterruptedException | IOException | StringIndexOutOfBoundsException ex) {
                     ex.printStackTrace();
                     System.out.println("LINK: " + httpget.getURI());
+                    try {
+                        Thread.sleep(120);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
 
 
