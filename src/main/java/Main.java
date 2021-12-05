@@ -51,17 +51,20 @@ public class Main {
 
     public static void main(String[] args) throws IOException, InterruptedException, ApiException {
         System.out.println(getCurrentTimeStamp() + " oldcoin is: " + old_coin);
-        scraper.getMultipleAnnouncements();
+
+        scraper.startMultipleThreads();
 
         do {
             coin = FileLoader.readFile("parser.txt");
-        } while (Objects.equals(old_coin, coin));
+        } while (Objects.equals(null, coin) || Objects.equals(old_coin, coin));
 
         String symbol = coin + "-USDT";
         System.out.println(getCurrentTimeStamp()  + " NEW COIN DETECTED: " + coin);
 
         if (mode == 0) kucoin.createBuyOrder(10L, symbol, "market", 1L);
         else gate.createOrder(symbol);
+
+        scraper.joinMultipleThreads();
 
         old_coin = coin;
 //        FileLoader.writeFile(coin);

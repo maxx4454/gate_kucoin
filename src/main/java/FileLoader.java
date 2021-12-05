@@ -1,11 +1,11 @@
 import java.io.*;
+import java.net.URL;
 
 public class FileLoader {
     static void writeFile (String s) throws IOException {
-        FileLoader.class.getResource("parser.txt").getFile();
+        URL resource = FileLoader.class.getClassLoader().getResource("parser.txt");
         FileWriter myWriter;
-        myWriter = FileLoader.class.getResource("parser.txt").getFile();
-//        myWriter = new FileWriter("src/main/resources/old_coin.txt");
+        myWriter = new FileWriter(String.valueOf(resource));
         myWriter.write(s);
         myWriter.close();
     }

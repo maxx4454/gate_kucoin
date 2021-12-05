@@ -1,7 +1,8 @@
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.protocol.HttpClientContext;
@@ -12,12 +13,7 @@ import org.apache.http.protocol.HttpContext;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.http.HttpRequest;
-//import java.net.http.HttpClient;
-import java.net.http.HttpResponse;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
@@ -26,11 +22,14 @@ public class ListingScraperBinance {
     static String link = "https://www.binancezh.top/bapi/composite/v1/public/cms/article/catalog/list/query?catalogId=48&pageNo=1&pageSize=15";
     static FileWriter myWriter;
     GetThread[] threads;
-    HttpGet httpget;
+    HttpGet[] httpget;
 
+
+    static URL resource = FileLoader.class.getClassLoader().getResource("parser.txt");
     static {
         try {
-            myWriter = new FileWriter("/src/main/resources/parser.txt");
+//            myWriter = new FileWriter(String.valueOf(resource));
+            myWriter = new FileWriter("/Users/max/IdeaProjects/gate_kucoin/target/classes/parser.txt");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -47,25 +46,36 @@ public class ListingScraperBinance {
 
     PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
     CloseableHttpClient httpClient = HttpClients.custom()
+            .setDefaultRequestConfig(RequestConfig.custom()
+                    .setCookieSpec(CookieSpecs.STANDARD).build())
             .setConnectionManager(cm)
             .build();
 
 
     static String[] urisToGet = {
-            //1 delayed
-//            "https://www.binance.com/bapi/composite/v1/public/cms/article/catalog/list/query?catalogId=48&pageNo=1&pageSize=15&rnd=",
+            //delayed
+            "https://www.binance.com/bapi/composite/v1/public/cms/article/catalog/list/query?catalogId=48&pageNo=1&pageSize=15&rnd=",
 
+            //status = ?
             "https://www.binancezh.top/bapi/composite/v1/public/cms/article/catalog/list/query?catalogId=48&pageNo=1&pageSize=15",
+
+            //status = ?
             "https://api.yshyqxx.com/bapi/composite/v1/public/cms/article/catalog/list/query?catalogId=48&pageNo=1&pageSize=15",
+
+            //status = ?
             "https://www.binancezh.cz/bapi/composite/v1/public/cms/article/catalog/list/query?catalogId=48&pageNo=1&pageSize=15",
+
+            //status = ?
             "https://www.binancezh.com/bapi/composite/v1/public/cms/article/catalog/list/query?catalogId=48&pageNo=1&pageSize=15"
     };
 
     public ListingScraperBinance() throws IOException {
+        System.out.println(resource);
         threads = new GetThread[urisToGet.length];
+        httpget = new HttpGet[urisToGet.length];
         for (int i = 0; i < threads.length; i++) {
-            httpget = new HttpGet(urisToGet[i]);
-            threads[i] = new GetThread(httpClient, httpget);
+            httpget[i] = new HttpGet(urisToGet[i]);
+            threads[i] = new GetThread(httpClient, httpget[i]);
         }
     }
 
@@ -75,58 +85,63 @@ public class ListingScraperBinance {
         private final CloseableHttpClient httpClient;
         private final HttpContext context;
         private final HttpGet httpget;
-        String coin;
+        String anCoin;
 
         public GetThread(CloseableHttpClient httpClient, HttpGet httpget) {
             this.httpClient = httpClient;
             this.context = HttpClientContext.create();
             this.httpget = httpget;
+
         }
 
         @Override
         public void run() {
-            try {
-                CloseableHttpResponse response = httpClient.execute(
-                        httpget, context);
-                do {
-                    try {
-                        HttpEntity entity = response.getEntity();
-                        String str = IOUtils.toString(entity.getContent(), StandardCharsets.UTF_8);
-                        coin = getCoin(str);
-                        if (!Objects.equals(coin, old_coin)){
-                            writeToFile(coin);
-                        }
 
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } finally {
-                        response.close();
+            do {
+                try {
+                    CloseableHttpResponse response = httpClient.execute(
+                            httpget, context);
+
+
+                    String str = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
+
+                    anCoin = getCoin(str);
+                    System.out.println(Main.getCurrentTimeStamp() + " parserinfo: " + anCoin);
+
+                    if (!Objects.equals(anCoin, old_coin)){
+                        writeToFile(anCoin);
                     }
-                } while (Objects.equals(coin, old_coin));
+                    response.close();
 
-            } catch (ClientProtocolException ex) {
-                // Handle protocol errors
-            } catch (IOException ex) {
-                // Handle I/O errors
-            }
+                }  // Handle protocol errors
+                catch (InterruptedException | IOException e) {
+                    e.printStackTrace();
+                }
+
+
+            } while (Objects.equals(anCoin, old_coin));
+
         }
         public String FinalCoin() {
-            return coin;
+            return anCoin;
         }
 
     }
 
-    void getMultipleAnnouncements() throws InterruptedException {
+    void startMultipleThreads() throws InterruptedException {
         // create a thread for each URI
         // start the threads
         for (GetThread thread : threads) {
             thread.start();
         }
+    }
 
-        // join the threads
+    void joinMultipleThreads() throws InterruptedException {
+//         join the threads
         for (GetThread thread : threads) {
             thread.join();
         }
+
     }
 
 
