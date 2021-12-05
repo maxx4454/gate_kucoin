@@ -35,7 +35,7 @@ public class ListingScraperBinance {
         try {
 //            myWriter = new FileWriter(String.valueOf(resource));
 //            myWriter = new FileWriter("/Users/max/IdeaProjects/gate_kucoin/target/classes/parser.txt");
-            myWriter = new FileWriter("/home/ec2-user/gate_kucoin/target/classes");
+            myWriter = new FileWriter("/home/ec2-user/gate_kucoin/target/classes/parser.txt");
 
         } catch (IOException e) {
             e.printStackTrace();
