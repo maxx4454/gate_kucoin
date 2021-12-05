@@ -106,7 +106,7 @@ public class ListingScraperBinance {
                     String str = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
 
                     anCoin = getCoin(str);
-                    System.out.println(Main.getCurrentTimeStamp() + " parserinfo: " + anCoin);
+//                    System.out.println(Main.getCurrentTimeStamp() + " parserinfo: " + anCoin);
 
                     if (!Objects.equals(anCoin, old_coin)){
                         writeToFile(anCoin);
