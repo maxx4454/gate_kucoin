@@ -13,7 +13,7 @@ public class FileLoader {
 
     static String readFile (String name) throws IOException {
         InputStream is = FileLoader.class.getResourceAsStream("/" + name);
-        System.out.println(FileLoader.class.getClassLoader().getResource("old_coin.txt"));
+//        System.out.println(FileLoader.class.getClassLoader().getResource("old_coin.txt"));
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
         return reader.readLine();
     }
