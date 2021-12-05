@@ -98,11 +98,13 @@ public class ListingScraperBinance {
 
             do {
                 try {
+                    Thread.sleep(10);
                     CloseableHttpResponse response = httpClient.execute(
                             httpget, context);
 
 
                     String str = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
+                    response.close();
 
                     anCoin = getCoin(str);
 //                    System.out.println(Main.getCurrentTimeStamp() + " parserinfo: " + anCoin);
@@ -110,11 +112,12 @@ public class ListingScraperBinance {
                     if (!Objects.equals(anCoin, old_coin)){
                         writeToFile(anCoin);
                     }
-                    response.close();
+
 
                 }  // Handle protocol errors
-                catch (InterruptedException | IOException e) {
-                    e.printStackTrace();
+                catch (InterruptedException | IOException | StringIndexOutOfBoundsException ex) {
+                    ex.printStackTrace();
+                    System.out.println("LINK: " + httpget.getURI());
                 }
 
 
