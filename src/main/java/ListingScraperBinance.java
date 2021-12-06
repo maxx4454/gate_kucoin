@@ -114,7 +114,7 @@ public class ListingScraperBinance {
 
             do {
                 try {
-                    Thread.sleep(50);
+                    Thread.sleep(100);
 
                     random_string = RandomStringUtils.randomAlphanumeric(10);
                     random_number = String.valueOf(1 + RanNum.nextInt(99999999));
