@@ -132,11 +132,9 @@ public class ListingScraperBinance {
 
                     anCoin = getCoin(str);
 
-
                     if (!Objects.equals(anCoin, old_coin)){
                         writeToFile(anCoin);
                     }
-
 
                 }  // Handle protocol errors
                 catch (InterruptedException | IOException | StringIndexOutOfBoundsException ex) {
@@ -148,15 +146,12 @@ public class ListingScraperBinance {
                         e.printStackTrace();
                     }
                 }
-
-
             } while (Objects.equals(anCoin, old_coin));
-
         }
+
         public String FinalCoin() {
             return anCoin;
         }
-
     }
 
     void startMultipleThreads() throws InterruptedException {
