@@ -133,6 +133,9 @@ public class ListingScraperBinance {
 
                     anCoin = getCoin(str);
 
+
+                    System.out.println(Main.getCurrentTimeStamp() + " PARSING");
+
                     if (!Objects.equals(anCoin, old_coin)){
                         writeToFile(anCoin);
                     }
