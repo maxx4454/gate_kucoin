@@ -61,7 +61,7 @@ public class Main {
         String symbol = coin + "-USDT";
         System.out.println(getCurrentTimeStamp()  + " NEW COIN DETECTED: " + coin);
 
-        if (mode == 0) kucoin.createBuyOrder(10L, symbol, "market", 2500L);
+        if (mode == 0) kucoin.createBuyOrder(10L, symbol, "market", 1000L);
         else gate.createOrder(symbol);
 
         scraper.joinMultipleThreads();

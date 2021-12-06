@@ -61,7 +61,7 @@ public class ListingScraperBinance {
 
     static String[] urisToGet = {
             //delayed
-//            "https://www.binance.com/bapi/composite/v1/public/cms/article/catalog/list/query?",
+            "https://www.binance.com/bapi/composite/v1/public/cms/article/catalog/list/query?",
 
             //status = dead
             "https://www.binancezh.top/bapi/composite/v1/public/cms/article/catalog/list/query?",
