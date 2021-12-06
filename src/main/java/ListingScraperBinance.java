@@ -144,6 +144,7 @@ public class ListingScraperBinance {
                 catch (InterruptedException | IOException | StringIndexOutOfBoundsException ex) {
                     ex.printStackTrace();
                     System.out.println(Main.getCurrentTimeStamp() + " LINK: " + link);
+//                    System.out.println(Main.getCurrentTimeStamp() + str);
                     try {
                         Thread.sleep(300*1000);
                     } catch (InterruptedException e) {
