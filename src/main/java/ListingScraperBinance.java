@@ -61,19 +61,19 @@ public class ListingScraperBinance {
 
     static String[] urisToGet = {
             //delayed
-//            "https://www.binance.com/bapi/composite/v1/public/cms/article/catalog/list/query?catalogId=48&pageNo=1&pageSize=15&rnd=",
+//            "https://www.binance.com/bapi/composite/v1/public/cms/article/catalog/list/query?",
 
             //status = dead
-//            "https://www.binancezh.top/bapi/composite/v1/public/cms/article/catalog/list/query?catalogId=48&pageNo=1&pageSize=15",
+            "https://www.binancezh.top/bapi/composite/v1/public/cms/article/catalog/list/query?",
 
             //status = dead after 150 sec
-//            "https://api.yshyqxx.com/bapi/composite/v1/public/cms/article/catalog/list/query?catalogId=48&pageNo=1&pageSize=15",
+            "https://api.yshyqxx.com/bapi/composite/v1/public/cms/article/catalog/list/query?",
 
             //status = dead
-//            "https://www.binancezh.cz/bapi/composite/v1/public/cms/article/catalog/list/query?catalogId=48&pageNo=1&pageSize=15",
+            "https://www.binancezh.cz/bapi/composite/v1/public/cms/article/catalog/list/query?",
 
             //status = alive???
-            "https://www.binancezh.com/bapi/composite/v1/public/cms/article/catalog/list/query?catalogId=48&pageNo=1&pageSize=15"
+            "https://www.binancezh.com/bapi/composite/v1/public/cms/article/catalog/list/query?"
     };
 
     public ListingScraperBinance() throws IOException {
@@ -82,7 +82,7 @@ public class ListingScraperBinance {
         httpget = new HttpGet[urisToGet.length];
         for (int i = 0; i < threads.length; i++) {
             httpget[i] = new HttpGet(urisToGet[i]);
-            threads[i] = new GetThread(httpClient, httpget[i]);
+            threads[i] = new GetThread(httpClient, httpget[i], urisToGet[i]);
         }
     }
 
@@ -97,11 +97,14 @@ public class ListingScraperBinance {
         String rand_page_size;
         String random_number;
         Random RanNum = new Random();
+        String link;
 
-        public GetThread(CloseableHttpClient httpClient, HttpGet httpget) {
+        public GetThread(CloseableHttpClient httpClient, HttpGet httpget, String link) {
             this.httpClient = httpClient;
             this.context = HttpClientContext.create();
             this.httpget = httpget;
+            this.link = link;
+
         }
 
 
@@ -119,6 +122,7 @@ public class ListingScraperBinance {
                             random_string+ "=" +random_number};
 
                     String uri = link + queries[0] + "&" + queries[1]+ "&" + queries[2]+ "&" + queries[3]+ "&" + queries[4] + "&" + queries[5];
+
                     CloseableHttpResponse response = httpClient.execute(
                             new HttpGet(uri),
                             context);
@@ -127,7 +131,7 @@ public class ListingScraperBinance {
                     response.close();
 
                     anCoin = getCoin(str);
-                    System.out.println(Main.getCurrentTimeStamp() + " parserinfo: " + anCoin);
+
 
                     if (!Objects.equals(anCoin, old_coin)){
                         writeToFile(anCoin);
@@ -137,9 +141,9 @@ public class ListingScraperBinance {
                 }  // Handle protocol errors
                 catch (InterruptedException | IOException | StringIndexOutOfBoundsException ex) {
                     ex.printStackTrace();
-                    System.out.println("LINK: " + httpget.getURI());
+                    System.out.println("LINK: " + link);
                     try {
-                        Thread.sleep(120);
+                        Thread.sleep(300*1000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
