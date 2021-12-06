@@ -141,7 +141,7 @@ public class ListingScraperBinance {
                 }  // Handle protocol errors
                 catch (InterruptedException | IOException | StringIndexOutOfBoundsException ex) {
                     ex.printStackTrace();
-                    System.out.println("LINK: " + link);
+                    System.out.println(Main.getCurrentTimeStamp() + " LINK: " + link);
                     try {
                         Thread.sleep(300*1000);
                     } catch (InterruptedException e) {

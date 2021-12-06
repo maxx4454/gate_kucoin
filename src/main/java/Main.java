@@ -64,6 +64,7 @@ public class Main {
         if (mode == 0) kucoin.createBuyOrder(10L, symbol, "market", 1000L);
         else gate.createOrder(symbol);
 
+        System.out.println(getCurrentTimeStamp()  + " ORDERED: " + coin);
         scraper.joinMultipleThreads();
 
         old_coin = coin;
