@@ -113,16 +113,17 @@ public class ListingScraperBinance {
         public void run() {
 
             do {
+                String uri = null;
                 try {
-                    Thread.sleep(200);
+                    Thread.sleep(   1000);
 
                     random_string = RandomStringUtils.randomAlphanumeric(10);
                     random_number = String.valueOf(1 + RanNum.nextInt(99999999));
-                    rand_page_size = String.valueOf(1 +  RanNum.nextInt(200));
-                    String[] queries = new String[] {"type=1", "catalogId=48", "pageNo=1", "pageSize="+rand_page_size, "rnd="+ currentTimeMillis(),
-                            random_string+ "=" +random_number};
+                    rand_page_size = String.valueOf(1 + RanNum.nextInt(200));
+                    String[] queries = new String[]{"type=1", "catalogId=48", "pageNo=1", "pageSize=" + rand_page_size, "rnd=" + currentTimeMillis(),
+                            random_string + "=" + random_number};
 
-                    String uri = link + queries[0] + "&" + queries[1]+ "&" + queries[2]+ "&" + queries[3]+ "&" + queries[4] + "&" + queries[5];
+                    uri = link + queries[0] + "&" + queries[1] + "&" + queries[2] + "&" + queries[3] + "&" + queries[4] + "&" + queries[5];
 
                     CloseableHttpResponse response = httpClient.execute(
                             new HttpGet(uri),
@@ -136,17 +137,17 @@ public class ListingScraperBinance {
 
                     System.out.println(Main.getCurrentTimeStamp() + " PARSING");
 
-                    if (!Objects.equals(anCoin, old_coin)){
+                    if (!Objects.equals(anCoin, old_coin)) {
                         writeToFile(anCoin);
                     }
 
                 }  // Handle protocol errors
                 catch (InterruptedException | IOException | StringIndexOutOfBoundsException ex) {
                     ex.printStackTrace();
-                    System.out.println(Main.getCurrentTimeStamp() + " LINK: " + link);
+                    System.out.println(Main.getCurrentTimeStamp() + " LINK: " + uri);
 //                    System.out.println(Main.getCurrentTimeStamp() + str);
                     try {
-                        Thread.sleep(300*1000);
+                        Thread.sleep(300 * 1000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
