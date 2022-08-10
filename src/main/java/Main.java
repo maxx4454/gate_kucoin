@@ -12,7 +12,7 @@ public class Main {
 
     static {
         try {
-            kucoin = new TradeClientKucoin("7055debe-a3eb-428d-9e48-80aa07dafa58", "61a33d0bb8e9230001265e74", "5tartWitMe!");
+            kucoin = new TradeClientKucoin();
         } catch (IOException e) {
             e.printStackTrace();
         }
