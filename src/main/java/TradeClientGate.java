@@ -7,8 +7,8 @@ import lombok.SneakyThrows;
 import java.util.List;
 
 public class TradeClientGate {
-    String api_key = "3de3e276618cf71f30c43e6766748141";
-    String secret_key = "9c4d119d0ecc8e9a1896875f05948536f4eb977e90b41ecc33b5da3593932354";
+    String api_key = "";
+    String secret_key = "";
     SpotApi spotApi;
     String currencyPair;
     String currency;
